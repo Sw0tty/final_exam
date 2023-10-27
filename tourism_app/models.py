@@ -6,9 +6,11 @@ from .resources import HARDEST_TYPE, STATUS_TYPE
 
 
 class Tourist(models.Model):
-    person = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
-    phone = models.CharField(max_length=11)
-    otc = models.CharField(max_length=255)
+    fam = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    otc = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=11, unique=True)
 
 
 class MountainPass(models.Model):
