@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 
-from resources import HARDEST_TYPE
+from .resources import HARDEST_TYPE, STATUS_TYPE
 
 
 class Tourist(models.Model):
@@ -16,20 +17,21 @@ class MountainPass(models.Model):
     other_titles = models.CharField(max_length=255)
     connect = models.CharField(max_length=255)
     add_time = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=8, choices=STATUS_TYPE, default='new', blank=False)
     person_add = models.OneToOneField("Tourist", on_delete=models.CASCADE, related_name='person_add')
     
 
 class MountainCoords(models.Model):
     latitude = models.CharField(max_length=255)
     longitude = models.CharField(max_length=255)
-    height = models.FloatField()
+    height = models.FloatField(default=0.0, validators=[MinValueValidator(0.0)])
     mountain_pass = models.OneToOneField("MountainPass", on_delete=models.CASCADE)
 
 
 class Image(models.Model):
     data = models.ImageField()
     title = models.CharField(max_length=255, unique=True)
-    mountain_image = models.OneToOneField("MountainPass", on_delete=models.CASCADE)
+    mountain_pass = models.OneToOneField("MountainPass", on_delete=models.CASCADE)
 
 
 class MountainLevel(models.Model):
@@ -37,7 +39,7 @@ class MountainLevel(models.Model):
     autumn = models.CharField(max_length=2, choices=HARDEST_TYPE)
     spring = models.CharField(max_length=2, choices=HARDEST_TYPE)
     winter = models.CharField(max_length=2, choices=HARDEST_TYPE)
-    hard_level = models.OneToOneField("MountainPass", on_delete=models.CASCADE)
+    mountain_pass = models.OneToOneField("MountainPass", on_delete=models.CASCADE)
 
 # {
 #   "beauty_title": "пер. ",
