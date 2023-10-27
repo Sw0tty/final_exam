@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-0+(xp-u^10+&c%8l=_9%je%6ouatou%9+3(7vo(+)raa!@9-$b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -85,16 +85,16 @@ DATABASES = {
 }
 
 # Postgres
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': config.db_login,
-        'PASSWORD': config.db_pass,
-        'HOST': config.db_host,
-        'PORT': config.db_port,
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': config.db_login,
+#         'PASSWORD': config.db_pass,
+#         'HOST': config.db_host,
+#         'PORT': config.db_port,
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
