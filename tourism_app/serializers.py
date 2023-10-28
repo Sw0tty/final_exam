@@ -1,39 +1,57 @@
-import io
-from django.contrib.auth.models import User
-from .models import Tourist, MountainPass, MountainCoords, Image, MountainLevel
 from rest_framework import serializers
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        # fields = '__all__'
-        fields = ('username', 'password')
+from .models import Tourist, MountainCoords, MountainPass , Image, MountainLevel
 
 
 class TouristSerializer(serializers.ModelSerializer):
-    person = UserSerializer()
     class Meta:
         model = Tourist
-        fields = ('phone', 'otc', 'person')
+        fields = '__all__'
 
 
-# class WomanCategorySerializer(serializers.ModelSerializer):
-#     category = CategorySerializer(many=True, read_only=True)
-#     # category = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-#     class Meta:
-#         model = Woman
-#         fields = ('title', 'content', 'category')
-
-#     def create(self, validated_data):
-#         category_data = validated_data.pop('category')
-#         category = Category.objects.create(**category_data)
-#         woman = Woman.objects.create(category=category, **validated_data)
-#         return woman
+class MountainCoordsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MountainCoords
+        exclude = ('mountain_pass',)
 
 
-# class MountainPassSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = MountainPass
-#         fields = '__all__'
+class MountainLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MountainLevel
+        exclude = ('mountain_pass',)
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        exclude = ('mountain_pass',)
+
+
+class MountainPassSerializer(serializers.ModelSerializer):
+    user = TouristSerializer()
+    coords = MountainCoordsSerializer()
+    level = MountainLevelSerializer()
+    images = ImageSerializer(many=True)
+
+
+    class Meta:
+        model = MountainPass
+        exclude = ('status',)
+
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        coords_data = validated_data.pop('coords')
+        level_data = validated_data.pop('level')
+        images_data = validated_data.pop('images')
+
+        tourist = Tourist.objects.create(**user_data)      
+        mountain_pass = MountainPass.objects.create(user=tourist, **validated_data)    
+        MountainCoords.objects.create(mountain_pass=mountain_pass, **coords_data)
+        MountainLevel.objects.create(mountain_pass=mountain_pass, **level_data)
+
+        if images_data:
+            for image_data in images_data:
+                Image.objects.create(mountain_pass=mountain_pass, **image_data)
+
+        return mountain_pass
