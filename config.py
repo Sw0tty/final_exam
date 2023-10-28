@@ -1,9 +1,13 @@
+"""
+.env loader
+"""
 import os
 from dotenv import load_dotenv
 
 
 load_dotenv()
 
+db_name = os.getenv("FSTR_DB_NAME")
 db_host = os.getenv("FSTR_DB_HOST")
 db_port = os.getenv("FSTR_DB_PORT")
 db_login = os.getenv("FSTR_DB_LOGIN")
