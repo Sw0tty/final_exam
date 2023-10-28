@@ -10,9 +10,12 @@ class Tourist(models.Model):
     otc = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=11, unique=True)
+<<<<<<< HEAD
 
     def __str__(self) -> str:
         return f"{self.fam} {self.name} {self.otc}"
+=======
+>>>>>>> master
 
 
 class MountainPass(models.Model):
