@@ -7,18 +7,40 @@ from tourism_app.models import MountainPass
 from tourism_app.serializers import MountainPassSerializer, DetailMountainPassSerializer
 
 
+# class DetailMountainPass(generics.RetrieveUpdateAPIView):
+#     queryset = MountainPass.objects.all()
+#     serializer_class = DetailMountainPassSerializer
+
+
 class DetailMountainPass(APIView):
     """
     API endpoint to get detail mountain pass
     """
     serializer_class = DetailMountainPassSerializer
+    model = MountainPass
 
-    def get_queryset(self, pk):
+    def get_object(self, pk):
         return MountainPass.objects.get(pk=pk)
     
-    def get(self, request, *args, **kwargs):
-        instance = self.get_queryset(**kwargs)
+    def get_serializer(self, instance):
+        return self.serializer_class(instance)
+    
+    def get(self, request, pk):
+        instance = self.get_object(pk)
         return Response(self.serializer_class(instance).data)
+    
+    def patch(self, request, pk):
+        object_instance = self.get_object(pk)
+
+        if object_instance.status != 'new':
+            return Response({"state": 0, "message": "Запись должна иметь статус new для редактирования"})
+
+        serializer = self.serializer_class(object_instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"state": 1, "message": "Запись обновлена"})
+        return Response({"status": status.HTTP_400_BAD_REQUEST, "message": "Введены недопустимые значения", "message": "Не удалось"})
     
 
 class ListMountainPasses(APIView):
@@ -27,14 +49,18 @@ class ListMountainPasses(APIView):
     """
     serializer_class = MountainPassSerializer
 
-    def get_queryset(self):
-        return MountainPass.objects.all()
+    def get_queryset(self, query_params, *args, **kwargs):
+        print(query_params.get('title'))
+        queryset = MountainPass.objects.filter(user__email=query_params.get('user_email'))
+        return queryset
     
     def get(self, request):
-        queryset = self.get_queryset()
-        return Response(self.serializer_class(queryset, many=True).data)
+        queryset = self.get_queryset(request.query_params)
+        if queryset:
+            return Response(self.serializer_class(queryset, many=True).data)
+        return Response({"state": 0, "message": "Ничего не найдено"})
     
-
+    
 class SubmitData(APIView):
     """
     API endpoint to post new mountain pass
