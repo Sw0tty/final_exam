@@ -7,27 +7,29 @@ from tourism_app.models import MountainPass
 from tourism_app.serializers import MountainPassSerializer
 
 
-class MountainPassAPIView(generics.CreateAPIView):
-    queryset = MountainPass.objects.all()
-    serializer_class = MountainPassSerializer
-
-
-class SubmitData(APIView):
+class ListMountainPasses(APIView):
     """
-    API endpoint to get mountains passes and post new
+    API endpoint to get all mountain passes
     """
     serializer_class = MountainPassSerializer
-    model = MountainPass
 
     def get_queryset(self):
         return MountainPass.objects.all()
     
-    def get_serializer(self):
-        return self.serializer_class()
-    
     def get(self, request):
         queryset = self.get_queryset()
         return Response(self.serializer_class(queryset, many=True).data)
+    
+
+class SubmitData(APIView):
+    """
+    API endpoint to post new mountain pass
+    """
+    serializer_class = MountainPassSerializer
+    model = MountainPass
+
+    def get_serializer(self):
+        return self.serializer_class()
     
     def post(self, request, *args, **kwargs):
         try:

@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from tourism_app.views import SubmitData
+from tourism_app.views import SubmitData, ListMountainPasses
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('submitData/', SubmitData.as_view()),
+    path('mountainPasses/', ListMountainPasses.as_view()),
 ]
