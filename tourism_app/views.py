@@ -4,8 +4,22 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from tourism_app.models import MountainPass
-from tourism_app.serializers import MountainPassSerializer
+from tourism_app.serializers import MountainPassSerializer, DetailMountainPassSerializer
 
+
+class DetailMountainPass(APIView):
+    """
+    API endpoint to get detail mountain pass
+    """
+    serializer_class = DetailMountainPassSerializer
+
+    def get_queryset(self, pk):
+        return MountainPass.objects.get(pk=pk)
+    
+    def get(self, request, *args, **kwargs):
+        instance = self.get_queryset(**kwargs)
+        return Response(self.serializer_class(instance).data)
+    
 
 class ListMountainPasses(APIView):
     """
