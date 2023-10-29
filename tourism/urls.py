@@ -22,5 +22,5 @@ from tourism_app.views import SubmitData
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/submit-mountain-pass/', SubmitData.as_view()),
+    path('submitData/', SubmitData.as_view()),
 ]
