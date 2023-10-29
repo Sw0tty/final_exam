@@ -5,11 +5,14 @@ from .resources import HARDEST_TYPE, STATUS_TYPE
 
 
 class Tourist(models.Model):
+    """
+    Email unique checking in creating mountain_pass moment
+    """
     fam = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     otc = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=11, unique=True)
+    email = models.EmailField()
+    phone = models.CharField(max_length=11)
 
     def __str__(self) -> str:
         return f"{self.fam} {self.name} {self.otc}"
@@ -22,7 +25,7 @@ class MountainPass(models.Model):
     connect = models.CharField(max_length=255)
     add_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=8, choices=STATUS_TYPE, default='new', blank=False)
-    user = models.OneToOneField("Tourist", on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey("Tourist", on_delete=models.CASCADE, related_name='user')
 
     def __str__(self) -> str:
         return self.title
