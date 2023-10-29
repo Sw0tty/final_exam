@@ -27,13 +27,20 @@ class ImageSerializer(serializers.ModelSerializer):
         exclude = ('mountain_pass',)
 
 
-class MountainPassSerializer(serializers.ModelSerializer):
+class BaseMountainPassSerializer(serializers.ModelSerializer):
+    """
+    Base API serializer to construct main serializer
+    """
     user = TouristSerializer()
     coords = MountainCoordsSerializer()
     level = MountainLevelSerializer()
     images = ImageSerializer(many=True)
 
 
+class MountainPassSerializer(BaseMountainPassSerializer, serializers.ModelSerializer):
+    """
+    API serializer for get detail mountain pass
+    """
     class Meta:
         model = MountainPass
         exclude = ('status',)
@@ -62,3 +69,12 @@ class MountainPassSerializer(serializers.ModelSerializer):
                 Image.objects.create(mountain_pass=mountain_pass, **image_data)
 
         return mountain_pass
+
+
+class DetailMountainPassSerializer(BaseMountainPassSerializer, serializers.ModelSerializer):
+    """
+    API serializer for get detail mountain pass
+    """
+    class Meta:
+        model = MountainPass
+        fields = '__all__'
