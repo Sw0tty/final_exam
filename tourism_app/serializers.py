@@ -73,8 +73,47 @@ class MountainPassSerializer(BaseMountainPassSerializer, serializers.ModelSerial
 
 class DetailMountainPassSerializer(BaseMountainPassSerializer, serializers.ModelSerializer):
     """
-    API serializer for get detail mountain pass
+    API serializer for get, patch detail mountain pass
     """
     class Meta:
         model = MountainPass
         fields = '__all__'
+
+    def update(self, instance, validated_data):
+
+        # user_data = validated_data.pop('user')
+        coords_data = validated_data.pop('coords')
+        level_data = validated_data.pop('level')
+        images_data = validated_data.pop('images')
+
+        instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
+        instance.title = validated_data.get('title', instance.title)
+        instance.other_titles = validated_data.get('other_titles', instance.other_titles)
+        instance.connect = validated_data.get('connect', instance.connect)
+        instance.save()
+
+        MountainCoords.objects.filter(id=instance.id).update(
+            latitude=coords_data.get('latitude'),
+            longitude=coords_data.get('longitude'),
+            height=coords_data.get('height')
+        )   
+
+        MountainLevel.objects.filter(id=instance.id).update(
+            summer=level_data.get('summer'),
+            autumn=level_data.get('autumn'),
+            spring=level_data.get('spring'),
+            winter=level_data.get('winter')
+        )
+
+        if images_data:
+            for image_data in images_data:
+                if "id" in image_data.keys():
+                    Image.objects.filter(id=image_data.id).update(
+                        data=image_data.get('data'),
+                        title=image_data.get('title')
+                    )
+                else:
+                    Image.objects.create(mountain_pass=instance, **image_data)
+
+        return instance
+    
