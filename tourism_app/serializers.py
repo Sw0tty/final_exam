@@ -22,6 +22,8 @@ class MountainLevelSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
     class Meta:
         model = Image
         exclude = ('mountain_pass',)
@@ -79,12 +81,15 @@ class DetailMountainPassSerializer(BaseMountainPassSerializer, serializers.Model
         model = MountainPass
         fields = '__all__'
 
+    def get_existing_fk(self, pk):
+        return Image.objects.filter(mountain_pass=pk).values_list('id', flat=True)
+    
     def update(self, instance, validated_data):
 
-        # user_data = validated_data.pop('user')
         coords_data = validated_data.pop('coords')
         level_data = validated_data.pop('level')
         images_data = validated_data.pop('images')
+        existing_images_id = [*self.get_existing_fk(instance.pk)]
 
         instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
         instance.title = validated_data.get('title', instance.title)
@@ -108,12 +113,17 @@ class DetailMountainPassSerializer(BaseMountainPassSerializer, serializers.Model
         if images_data:
             for image_data in images_data:
                 if "id" in image_data.keys():
-                    Image.objects.filter(id=image_data.id).update(
+                    existing_images_id.remove(image_data['id'])
+                    Image.objects.filter(id=image_data['id']).update(
                         data=image_data.get('data'),
                         title=image_data.get('title')
                     )
                 else:
                     Image.objects.create(mountain_pass=instance, **image_data)
+        
+        if existing_images_id:
+            for exist_id in existing_images_id:
+                Image.objects.get(id=exist_id).delete()
 
         return instance
     
