@@ -15,6 +15,7 @@ from tourism_app.serializers import MountainPassSerializer, DetailMountainPassSe
 class DetailMountainPass(APIView):
     """
     API endpoint to get detail mountain pass
+    Methods: GET, PATCH
     """
     serializer_class = DetailMountainPassSerializer
     model = MountainPass
@@ -45,17 +46,22 @@ class DetailMountainPass(APIView):
 
 class ListMountainPasses(APIView):
     """
-    API endpoint to get all mountain passes
+    API endpoint to filter mountain passes
+    Methods: GET
     """
     serializer_class = MountainPassSerializer
 
-    def get_queryset(self, query_params, *args, **kwargs):
-        print(query_params.get('title'))
-        queryset = MountainPass.objects.filter(user__email=query_params.get('user_email'))
+    def get_queryset(self, query_params):
+        queryset = MountainPass.objects.all()
+        email_filter = query_params.get('user_email')
+
+        if email_filter:
+            queryset = queryset.filter(user__email=email_filter)
         return queryset
     
     def get(self, request):
         queryset = self.get_queryset(request.query_params)
+        
         if queryset:
             return Response(self.serializer_class(queryset, many=True).data)
         return Response({"state": 0, "message": "Ничего не найдено"})
@@ -64,6 +70,7 @@ class ListMountainPasses(APIView):
 class SubmitData(APIView):
     """
     API endpoint to post new mountain pass
+    Methods: POST
     """
     serializer_class = MountainPassSerializer
     model = MountainPass
