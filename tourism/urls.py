@@ -22,12 +22,12 @@ from tourism_app.views import SubmitData, ListMountainPasses, DetailMountainPass
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^submitData/$', ListMountainPasses.as_view()),
+    path('filterData/', ListMountainPasses.as_view()),
 
     path('submitData/', include(
             [
-                path('', SubmitData.as_view()),
                 path('<int:pk>/', DetailMountainPass.as_view()),
+                path('', SubmitData.as_view()),
             ]
         )
     ),
