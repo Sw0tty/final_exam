@@ -34,14 +34,14 @@ class DetailMountainPass(APIView):
         object_instance = self.get_object(pk)
 
         if object_instance.status != 'new':
-            return Response({"state": 0, "message": "Запись должна иметь статус new для редактирования"})
+            return Response({"state": 0, "message": "Запись должна иметь статус new для редактирования"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.serializer_class(object_instance, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
             return Response({"state": 1, "message": "Запись обновлена"})
-        return Response({"status": status.HTTP_400_BAD_REQUEST, "message": "Введены недопустимые значения", "message": "Не удалось"})
+        return Response({"state": 0, "message": "Введены недопустимые значения"}, status=status.HTTP_400_BAD_REQUEST)
     
 
 class ListMountainPasses(APIView):
@@ -63,8 +63,8 @@ class ListMountainPasses(APIView):
         queryset = self.get_queryset(request.query_params)
         
         if queryset:
-            return Response(self.serializer_class(queryset, many=True).data)
-        return Response({"state": 0, "message": "Ничего не найдено"})
+            return Response(self.serializer_class(queryset, many=True).data, status=status.HTTP_200_OK)
+        return Response({"state": 0, "message": "Ничего не найдено"}, status=status.HTTP_204_NO_CONTENT)
     
     
 class SubmitData(APIView):
@@ -83,7 +83,7 @@ class SubmitData(APIView):
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"status": status.HTTP_201_CREATED, "message": "Запись создана", "id": serializer.data['id']})
-            return Response({"status": status.HTTP_400_BAD_REQUEST, "message": "Введены недопустимые значения", "id": None})
+                return Response({"status": status.HTTP_201_CREATED, "message": "Запись создана", "id": serializer.data['id']}, status=status.HTTP_201_CREATED)
+            return Response({"status": status.HTTP_400_BAD_REQUEST, "message": "Введены недопустимые значения", "id": None}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Ошибка подключения к базе данных", "id": None})
+            return Response({"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Ошибка подключения к базе данных", "id": None}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
