@@ -1,15 +1,9 @@
-from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from tourism_app.models import MountainPass
 from tourism_app.serializers import MountainPassSerializer, DetailMountainPassSerializer
-
-
-# class DetailMountainPass(generics.RetrieveUpdateAPIView):
-#     queryset = MountainPass.objects.all()
-#     serializer_class = DetailMountainPassSerializer
 
 
 class DetailMountainPass(APIView):
@@ -34,7 +28,8 @@ class DetailMountainPass(APIView):
         object_instance = self.get_object(pk)
 
         if object_instance.status != 'new':
-            return Response({"state": 0, "message": "Запись должна иметь статус new для редактирования"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"state": 0, "message": "Запись должна иметь статус new для редактирования"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.serializer_class(object_instance, data=request.data, partial=True)
 
@@ -83,7 +78,11 @@ class SubmitData(APIView):
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"status": status.HTTP_201_CREATED, "message": "Запись создана", "id": serializer.data['id']}, status=status.HTTP_201_CREATED)
-            return Response({"status": status.HTTP_400_BAD_REQUEST, "message": "Введены недопустимые значения", "id": None}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"status": status.HTTP_201_CREATED, "message": "Запись создана", "id": serializer.data['id']},
+                                status=status.HTTP_201_CREATED)
+            
+            return Response({"status": status.HTTP_400_BAD_REQUEST, "message": "Введены недопустимые значения", "id": None},
+                            status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Ошибка подключения к базе данных", "id": None}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"status": status.HTTP_500_INTERNAL_SERVER_ERROR, "message": "Ошибка подключения к базе данных", "id": None},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
