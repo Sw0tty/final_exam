@@ -1,9 +1,8 @@
 # REST API "Mountain passes" (EN)
 
 ## Description
-This API was developed in order to solve the long and inconvenient processing of adding mountain passes to the database of the website of the Sports Tourism Federation of Russia (FSTR), which is replenished by tourists who have visited a particular pass.
-
-During the development process, the database structure was redesigned, methods of interaction between the front and the back were developed. The user can easily go to the FSTR website and fill out a form to add the pass that he visited. While the record is being processed by site moderation, the user can edit it. The method of viewing all existing records and filtering these records by mail of the author of the record is also implemented.
+> This API was developed in order to solve the long and inconvenient processing of adding mountain passes to the database of the website of the Sports Tourism Federation of Russia (FSTR), which is replenished by tourists who have visited a particular pass.
+> During the development process, the database structure was redesigned, methods of interaction between the front and the back were developed. The user can easily go to the FSTR website and fill out a form to add the pass that he visited. While the record is being processed by site moderation, the user can edit it. The method of viewing all existing records and filtering these records by mail of the author of the record is also implemented.
 
 ## REST API Views
 ### SubmitData
@@ -13,7 +12,7 @@ During the development process, the database structure was redesigned, methods o
 > The DetailMountainPass view is used for editing. The user selects his entry on the site, and then enters the necessary edits in the transmitted data. If all the data is correct, then the data is overwritten, otherwise an error is returned. Also, the user cannot edit his personal data (full name, email and phone number), only view it. The field editing is supposed to be blocked on the front side. In a situation where edited data is transmitted, the back does not process user data in any way.
 
 ### ListMountainPasses
-> To view and filter records, the ListMountainPasses view is used. It is assumed that there is a field on the front through which the data filtering request changes. Only a json request is sent to the back, which changes the search query and returns filtered data.
+> To view and filter records, the ListMountainPasses view is used. It is assumed that there is a field on the front through which the data filtering request changes. Only a json request is sent to the back, which changes the search query and returns filtered data.\\\\
 
 
 
