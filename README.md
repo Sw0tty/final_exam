@@ -13,6 +13,7 @@
 
 ### ListMountainPasses
 > To view and filter records, the ListMountainPasses view is used. It is assumed that there is a field on the front through which the data filtering request changes. Only a json request is sent to the back, which changes the search query and returns filtered data.
+
 > [!NOTE]
 > More detailed documentation is provided in Swagger, endpoint: `api/schema/documentation/`
 <br />
@@ -33,5 +34,6 @@
 
 ### ListMountainPasses
 > Для просмотра, фильтрации записей используется представление ListMountainPasses. Предполагается, что на фронте есть поле, через которое меняется запрос фильтрации данных. На бэк передается только json запрос, который меняет поисковый запрос и возвращает отфильтрованные данные.
+
 > [!NOTE]
 > Более подробная документация представлена в Swagger, endpoint: `api/schema/documentation/`
