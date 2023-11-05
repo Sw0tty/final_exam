@@ -12,9 +12,9 @@
 > The DetailMountainPass view is used for editing. The user selects his entry on the site, and then enters the necessary edits in the transmitted data. If all the data is correct, then the data is overwritten, otherwise an error is returned. Also, the user cannot edit his personal data (full name, email and phone number), only view it. The field editing is supposed to be blocked on the front side. In a situation where edited data is transmitted, the back does not process user data in any way.
 
 ### ListMountainPasses
-> To view and filter records, the ListMountainPasses view is used. It is assumed that there is a field on the front through which the data filtering request changes. Only a json request is sent to the back, which changes the search query and returns filtered data.\\\\
-
-
+> To view and filter records, the ListMountainPasses view is used. It is assumed that there is a field on the front through which the data filtering request changes. Only a json request is sent to the back, which changes the search query and returns filtered data.
+<br />
+<br />
 
 # REST API "Горные перевалы" (RU)
 
