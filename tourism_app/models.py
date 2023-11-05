@@ -10,12 +10,12 @@ class Tourist(models.Model):
     """
     fam = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
-    otc = models.CharField(max_length=50)
+    otc = models.CharField(max_length=50, blank=True)
     email = models.EmailField()
     phone = models.CharField(max_length=11)
 
     def __str__(self) -> str:
-        return f"{self.fam} {self.name} {self.otc}"
+        return f"{self.fam} {self.name} {self.otc}".strip()
 
 
 class MountainPass(models.Model):
